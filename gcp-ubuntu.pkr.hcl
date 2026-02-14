@@ -21,6 +21,6 @@ source "googlecompute" "ubuntu" {
 }
 
 build {
-  name    = "learn-packer-gcp"
+  name    = "learn-packer-gcp-1"
   sources = ["source.googlecompute.ubuntu"]
 }
