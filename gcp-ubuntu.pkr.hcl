@@ -13,7 +13,7 @@ source "googlecompute" "ubuntu" {
   machine_type = "e2-micro"
 
   source_image_family     = "ubuntu-2204-lts"
-  source_image_project_id = "ubuntu-os-cloud"
+  source_image_project_id = ["ubuntu-os-cloud"]
 
   ssh_username = "packer"
 
