@@ -1,32 +1,26 @@
 packer {
   required_plugins {
-    amazon = {
-      version = ">= 1.2.8"
-      source  = "github.com/hashicorp/amazon"
+    googlecompute = {
+      version = ">= 1.0.0"
+      source  = "github.com/hashicorp/googlecompute"
     }
   }
 }
 
-source "amazon-ebs" "ubuntu" {
-  ami_name      = "learn-packer-linux-aws-ubuntutest"
-  instance_type = "t2.micro"
-  region        = "ap-south-1"
-  source_ami_filter {
-    filters = {
-      name                = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
-      root-device-type    = "ebs"
-      virtualization-type = "hvm"
-    }
-    most_recent = true
-    owners      = ["099720109477"]
-  }
-  ssh_username = "ubuntu"
+source "googlecompute" "ubuntu" {
+  project_id   = "packer-image-project"
+  zone         = "asia-south1-a"
+  machine_type = "e2-micro"
+
+  source_image_family     = "ubuntu-2204-lts"
+  source_image_project_id = ["ubuntu-os-cloud"]
+
+  ssh_username = "packer"
+
+  image_name = "learn-packer-gcp-ubuntu-{{timestamp}}"
 }
+
 build {
-  name = "learn-packer"
-  sources = [
-    "source.amazon-ebs.ubuntu"
-  ]
+  name    = "learn-packer-gcp-1"
+  sources = ["source.googlecompute.ubuntu"]
 }
-
-#packer build -var-file="variables.pkrvars.hcl" .
