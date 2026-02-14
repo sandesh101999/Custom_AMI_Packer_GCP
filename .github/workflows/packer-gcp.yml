@@ -1,0 +1,35 @@
+name: Packer Build GCP
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Packer
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y unzip
+          curl -fsSL -o packer.zip https://releases.hashicorp.com/packer/1.8.4/packer_1.8.4_linux_amd64.zip
+          unzip packer.zip
+          sudo mv packer /usr/local/bin/
+          packer --version
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: Run Packer Build
+        run: |
+          packer init gcp-ubuntu.pkr.hcl
+          packer validate gcp-ubuntu.pkr.hcl
+          packer fmt gcp-ubuntu.pkr.hcl
+          packer build gcp-ubuntu.pkr.hcl
