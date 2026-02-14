@@ -2,12 +2,7 @@ name: Packer Build GCP
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - feature-branch
-  push:
-    branches:
-      - feature-branch
+  
 
 permissions:
   contents: read
